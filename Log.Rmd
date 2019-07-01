@@ -1,0 +1,19 @@
+---
+title: "Log of mpoly progress"
+author: "Evan Miyakawa"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Brainstorming
+
+\begin{itemize} 
+  \item 
+\end{itemize}
+
+
