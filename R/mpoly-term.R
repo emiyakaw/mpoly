@@ -5,6 +5,17 @@ library("stringr")
 ## mpoly_terms
 ############################################################
 
+term <- list(
+    coef = 2L,
+    core = c("x" = 1L, "y" = 2L, "z" = 1L)
+)
+
+term <-  list(
+  coef = complex(real = 1, imaginary = 1),
+  core = c("x" = 1L, "y" = 2L)
+)
+
+
 print.mpoly_term <- function (term, silent = FALSE, stars = FALSE) {
 
   # treat constant terms (no indeterminates) and those with vars differently
@@ -18,13 +29,13 @@ print.mpoly_term <- function (term, silent = FALSE, stars = FALSE) {
     times <- if(stars) "*" else " "
     
     # format coefficient
-    coef_to_disp <- if (class(term$coef) == "complex") {
+    coef_to_disp <- if (class(term$coef) == "complex") { # checking to see if coef is complex
       if (Im(term$coef) == 0) { # if purely real
         str_sub(capture.output(print(Re(term$coef))), 5)
       } else if (Re(term$coef) == 0) { # if purely imaginary
         str_c(str_sub(capture.output(print(Im(term$coef))), 5), "i")
       } else {
-        str_c("(", str_sub(capture.output(print(term$coef)), 5), ")")
+        str_c("(", str_sub(capture.output(print(term$coef)), 5), ")") # the 5 is for where in the printed output the actual part starts
       }
     } else {
       str_sub(capture.output(print(term$coef)), 5)
@@ -60,6 +71,7 @@ print.mpoly_term <- function (term, silent = FALSE, stars = FALSE) {
 ########################################
 
 
+
 term <- structure(
   list(
     coef = 2L,
@@ -67,6 +79,8 @@ term <- structure(
   ),
   class = "mpoly_term"
 )
+
+term
 
 # term
 # 2 x y^2 z
@@ -153,7 +167,7 @@ print.bare_mpoly <- function (x, silent = FALSE, ...) {
 ## examples
 ########################################
 
-structure(
+bare <- structure(
   list(
     structure(
       list(
@@ -204,11 +218,12 @@ structure(
 )
 # -5 - x^2 y
 
-
+bare$1
 
 ## mpoly
 ############################################################
 
+x <- mpol
 
 print.mpoly <- function (x, silent = FALSE, ...) {
   
@@ -231,7 +246,7 @@ print.mpoly <- function (x, silent = FALSE, ...) {
 
 
 
-structure(
+p <- structure(
   list(
     structure(
       list(
@@ -249,22 +264,34 @@ structure(
     )
   ),
   class = "bare_mpoly"
-) -> p
+)
 
 
-structure(
+mpol <- structure(
   list(p, p, p, p),
   class = "mpoly", 
   coefring = "numeric", 
   vars = c("x", "y"),
   .Dim = c(2L,2L)
+  )
+
+mpol <- structure(
+  list(p),
+  class = "mpoly", 
+  coefring = "numeric", 
+#  vars = c("x", "y"),
+  .Dim = c(1L,1L)
 )
+
+mpol
+
+mpol + mpol
 #      [,1]         [,2]        
 # [1,] -5 - x^2 y   -5 - x^2 y  
 # [2,] -5 - x^2 y   -5 - x^2 y
 
 
-structure(
+mpol2 <- structure(
   list(p, p, p, p, p, p, p, p),
   class = "mpoly", 
   coefring = "numeric", 
