@@ -33,6 +33,9 @@
 #' mpoly(list)
 #' 
 #' 
+
+
+
 mpoly <- function(list, varorder){
 
   ## argument checking
