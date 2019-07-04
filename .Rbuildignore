@@ -3,5 +3,4 @@
 ^README.Rmd$
 ^Log.Rmd$
 ^Log.pdf$
-^\R\mpoly-term.R$
-^mpoly-term\.R$
+^/R/mpoly-term\.R$
