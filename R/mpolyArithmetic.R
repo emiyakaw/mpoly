@@ -25,10 +25,37 @@
 NULL
 
 
+p <- structure(
+  list(
+    structure(
+      list(
+        coef = -5,
+        core = integer(0)
+      ),
+      class = "mpoly_term"
+    ),
+    structure(
+      list(
+        coef = -1,
+        core = c("x" = 2L, "y" = 1L)
+      ),
+      class = "mpoly_term"
+    )
+  ),
+  class = "bare_mpoly"
+)
 
 
+mpol <- structure(
+  list(p),
+  class = "mpoly",
+  coefring = "numeric",
+  #  vars = c("x", "y"),
+  .Dim = c(1L,1L)
+)
 
-
+e1 <- p
+e2 <- p
 
 
 #' @rdname mpolyArithmetic

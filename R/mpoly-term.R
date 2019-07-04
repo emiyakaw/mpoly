@@ -266,6 +266,8 @@ p <- structure(
   class = "bare_mpoly"
 )
 
+p + p
+
 
 mpol <- structure(
   list(p, p, p, p),
