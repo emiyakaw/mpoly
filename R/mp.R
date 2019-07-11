@@ -48,12 +48,21 @@
 
 #' @export
 #' @rdname mp
+#' 
+
+string <- "2 y"
+
+vars
+
 make_indeterminate_list <- function (vars) {
+  
+  # var <- uvars[[1]]
   
   make_indeterminate <- function(var, ...) {
     v <- c(1, 1)
     names(v) <- c(var, "coef")
-    structure(list(v), class = "mpoly")
+    structure(list(v), class = "mpoly-term")
+    structure(list())
   }
 
   uvars <- unique(vars)
@@ -62,9 +71,24 @@ make_indeterminate_list <- function (vars) {
   l
   
 }
+
+make_indeterminate_list <- function (vars) {
+  
+  make_indeterminate <- function(var, ...) {
+    v <- c(1, 1)
+    names(v) <- c(var, "coef")
+    structure(list(v), class = "mpoly1")
+  }
+  
+  uvars <- unique(vars)
+  l <- lapply(uvars, make_indeterminate)
+  names(l) <- uvars
+  l
+  
+}
 # make_indeterminate_list("a")
 # make_indeterminate_list(letters) 
-
+make_indeterminate_list(vars)
 
 
 #' @export
