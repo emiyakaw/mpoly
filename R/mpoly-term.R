@@ -1,33 +1,43 @@
 # mpoly-term 
 
-mpoly(list)
-mp("")
+# mpoly(list)
+# mp("")
+# 
+# list <- list(
+#   c(x = 1, coef = 1, y = 0),
+#   c(x = 0, y = 1, coef = 2),
+#   c(y = 1, coef = -6),
+#   c(z = 1, coef = -3, x = 2),
+#   c(x = 1, coef = 0, x = 3),
+#   c(t = 1, coef = 4, t = 2, y = 4),
+#   c(x = 1),
+#   c(x = 1),
+#   c(coef = 5),
+#   c(coef = 5),
+#   c(coef = -5)
+# )
+# 
+# term <- list[[4]]
+# 
+# term <- unclass(structure(
+#   list(
+#     coef = complex(real = 1, imaginary = -2),
+#     core = c("x" = 3L, "y" = 4L)
+#   ),
+#   class = "mpoly_term"
+# ))
+# 
+# mpoly_term(term)
+# 
+# 
+# term <- structure(
+#   list(
+#     coef = complex(real = 1, imaginary = -2),
+#     core = c("x" = 3L, "y" = 4L)
+#   ),
+#   class = "mpoly_term"
+# )
 
-list <- list(
-  c(x = 1, coef = 1, y = 0),
-  c(x = 0, y = 1, coef = 2),
-  c(y = 1, coef = -6),
-  c(z = 1, coef = -3, x = 2),
-  c(x = 1, coef = 0, x = 3),
-  c(t = 1, coef = 4, t = 2, y = 4),
-  c(x = 1),
-  c(x = 1),
-  c(coef = 5),
-  c(coef = 5),
-  c(coef = -5)
-)
-
-term <- list[[4]]
-
-term <- unclass(structure(
-  list(
-    coef = complex(real = 1, imaginary = -2),
-    core = c("x" = 3L, "y" = 4L)
-  ),
-  class = "mpoly_term"
-))
-
-term
 
 mpoly_term <- function(term, varorder){
   
@@ -46,38 +56,22 @@ mpoly_term <- function(term, varorder){
   
   
   # give terms without a coefficient a coef of 1
+  addCoefIfMissing <- if (length(term) == 1) {
+    term <- append(term, 1, after = 0)
+    names(term)[1] <- "coef"
+  }
   addCoefIfMissing <- function(v){
     if(any("coef" == names(v))) return(v)
     c(v, coef = 1)
   }
-  list <- lapply(list, addCoefIfMissing)
+  # list <- lapply(list, addCoefIfMissing)
   
   
-  
+  v <- term$core
   ## organize 
-  
-  # remove terms with coef 0
-  list <- filterOutZeroTerms(list)
-  
-  
   # remove 0 degrees, combine like degrees, single coef as rightmost element
-  list <- lapply(list, function(v){  	
-    # separate vardegs from coefs
-    coef_ndx <- which(names(v) == "coef")
-    coefs <- v[coef_ndx]    
-    v     <- v[-coef_ndx]
-    
-    # combine like degrees (sum)
-    if(length(names(v)) != length(unique(names(v)))) v <- fastNamedVecTapply(v, sum)   
-    
-    # combine like coefficients (product)
-    coefs <- c(coef = prod(coefs))
-    
-    # remove zero degree elements, combine and return  
-    c(v[v != 0], coefs)
-  })
-  
-  
+  # combine like degrees (sum)
+  if(length(names(term)) != length(unique(names(term)))) v <- fastNamedVecTapply(term, sum)   
   
   ## set intrinsic varorder - done again after 0 degrees are removed
   vars <- unique(names(flatList))
@@ -94,71 +88,63 @@ mpoly_term <- function(term, varorder){
     vars <- varorder
   }
   
-  
+  v <- term
   # sort variables in terms
-  list <- lapply(list, function(v){
-    p <- length(v) - 1L
-    if(p == 0L) return(v)
-    c( (v[1:p])[intersect(vars, names(v[1:p]))], v["coef"] )
-  })   
+  # list <- lapply(list, function(v){
+  #   p <- length(v) - 1L
+  #   if(p == 0L) return(v)
+  #   c( (v[1:p])[intersect(vars, names(v[1:p]))], v["coef"] )
+  # })   
   
-  
-  
-  ## prepare to check if like terms are present
-  monomials <- vapply(list, function(v){
-    p <- length(v) - 1 # remove coef on monomials
-    paste(names(v[1:p]), v[1:p],  sep = "", collapse = "")
-  }, character(1))  
   # e.g. c("x1", "y1", "y1", "x2z1", "y4t3", "x1", "x1", "coef5")
   
-  unique_monomials <- unique(monomials)
+  # unique_monomials <- unique(monomials)
   
   
   
   ## check if like terms are present and, if so, correct  
-  if(length(monomials) != length(unique_monomials)){
-    
-    matchedMonomials <- match(monomials, unique_monomials)
-    matchedMonomials <- factor(matchedMonomials, levels = 1:max(matchedMonomials))
-    ndcs2combine     <- split.default(1:length(list), matchedMonomials)
-    
-    list <- lapply(ndcs2combine, function(v){
-      if(length(v) == 1) return(list[[v]])      
-      coef <- sum(vapply(list[v], `[`, double(1), length(list[[v[1]]])))
-      v <- list[[v[1]]]
-      v["coef"] <- coef
-      v
-    })
-    
-    names(list) <- NULL # i.e. list <- unname(list)
-  }
+  # if(length(monomials) != length(unique_monomials)){
+  #   
+  #   matchedMonomials <- match(monomials, unique_monomials)
+  #   matchedMonomials <- factor(matchedMonomials, levels = 1:max(matchedMonomials))
+  #   ndcs2combine     <- split.default(1:length(list), matchedMonomials)
+  #   
+  #   list <- lapply(ndcs2combine, function(v){
+  #     if(length(v) == 1) return(list[[v]])      
+  #     coef <- sum(vapply(list[v], `[`, double(1), length(list[[v[1]]])))
+  #     v <- list[[v[1]]]
+  #     v["coef"] <- coef
+  #     v
+  #   })
+  #   
+  #   names(list) <- NULL # i.e. list <- unname(list)
+  # }
   
   
   
   ## combine constant terms
   ## mpoly(list(c(x = 1, coef = 1), c(coef = 1), c(coef = 2)))    
-  nonConstantTerms <- fastFilter(isNotLengthOne, list)
-  constantTerms    <- fastFilter(isLengthOne, list)
-  
-  if(length(constantTerms) > 0){
-    list <- c(
-      nonConstantTerms, 
-      list(Reduce(`+`, constantTerms))
-    )  
-  }
-  
-  
-  
-  ## re-organize after like-terms combined
-  list <- filterOutZeroTerms(list)
+  # nonConstantTerms <- fastFilter(isNotLengthOne, list)
+  # constantTerms    <- fastFilter(isLengthOne, list)
+  # 
+  # if(length(constantTerms) > 0){
+  #   list <- c(
+  #     nonConstantTerms, 
+  #     list(Reduce(`+`, constantTerms))
+  #   )  
+  # }
+  # 
+  # 
+  # 
+  # ## re-organize after like-terms combined
+  # list <- filterOutZeroTerms(list)
   
   
   
   ## return classed list
-  class(list) <- "bare_mpoly"
-  list  
+  class(term) <- "mpoly_term"
+  term
 }
-
 
 
 
