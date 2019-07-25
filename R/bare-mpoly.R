@@ -75,6 +75,34 @@ list <- unclass(structure(
     ),
     structure(
       list(
+        coef = complex(real = 0),
+        core = c("x" = 2L, "y" = 1L)
+      ),
+      class = "mpoly_term"
+    )
+  ),
+  class = "bare_mpoly"
+))
+
+
+list <- unclass(structure(
+  list(
+    structure(
+      list(
+        coef = complex(real = -5, imaginary = 1),
+        core = integer(0)
+      ),
+      class = "mpoly_term"
+    ),
+    structure(
+      list(
+        coef = complex(real = -1),
+        core = c("x" = 2L, "y" = 1L)
+      ),
+      class = "mpoly_term"
+    ),
+    structure(
+      list(
         coef = complex(real = 2),
         core = c("x" = 2L, "y" = 1L)
       ),
@@ -132,27 +160,57 @@ bare_mpoly <- function(list, varorder){
   
   
   ## organize 
+  
+  # remove 0 degrees, combine like degrees, single coef as rightmost element
+  # list <- lapply(list, function(v){  	
+  #   # separate vardegs from coefs
+  #   # coef_ndx <- which(names(v) == "coef")
+  #   # coefs <- v[coef_ndx]    
+  #   # v     <- v[-coef_ndx]
+  #   # 
+  # 	# combine like degrees (sum)
+  #   if(length(names(v)) != length(unique(names(v)))) v <- fastNamedVecTapply(v, sum)   
+  # 	
+  # 	# combine like coefficients (product)
+  # 	coefs <- c(coef = prod(coefs))
+  # 	
+  # 	# remove zero degree elements, combine and return  
+  #   c(v[v != 0], coefs)
+  # })
+  
+  # combine list elements with same core
+  core_list <- lapply(list, function (x) x$`core`)
     
+  core_equal <- function(index) {
+    equal_cores <- which(core_list[(index + 1) : (length(core_list))] %in% core_list[index])
+    if (length(equal_cores) == 0) {
+      return (c(0,0))
+    } else {
+      return (c(index,index + equal_cores))
+    }
+  }
+  
+  # make vector of pairs where cores match
+  core_pairs_matching <- as.vector(sapply(1:length(core_list) - 1, core_equal))
+  
+  # if there is a matching pair, make one coef the addition of the two, and the other one becomes zero
+  combine_matching_cores <- function(index) {
+    pair <- core_pairs_matching[(index * 2 - 1):(index * 2)]
+    if (!identical(pair, c(0,0))) {
+      coef1 <- list[[pair[1]]]$coef
+      coef2 <- list[[pair[2]]]$coef
+      new_coef <- coef1 + coef2
+      list[[pair[1]]]$coef <<- 0 #get rid of one coef
+      list[[pair[2]]]$coef <<- new_coef #add coefs and put into second coef
+    }
+    return (invisible(c()))
+  }
+  
+  invisible(lapply(1:3, combine_matching_cores))
+  
   # remove terms with coef 0
   list <- filterOutZeroTerms(list)
   
-  
-  # remove 0 degrees, combine like degrees, single coef as rightmost element
-  list <- lapply(list, function(v){  	
-    # separate vardegs from coefs
-    coef_ndx <- which(names(v) == "coef")
-    coefs <- v[coef_ndx]    
-    v     <- v[-coef_ndx]
-  	
-  	# combine like degrees (sum)
-  	if(length(names(v)) != length(unique(names(v)))) v <- fastNamedVecTapply(v, sum)   
-  	
-  	# combine like coefficients (product)
-  	coefs <- c(coef = prod(coefs))
-  	
-  	# remove zero degree elements, combine and return  
-    c(v[v != 0], coefs)
-  })
   
   
   

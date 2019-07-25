@@ -1,42 +1,42 @@
 # mpoly-term 
 
-# mpoly(list)
-# mp("")
-# 
-# list <- list(
-#   c(x = 1, coef = 1, y = 0),
-#   c(x = 0, y = 1, coef = 2),
-#   c(y = 1, coef = -6),
-#   c(z = 1, coef = -3, x = 2),
-#   c(x = 1, coef = 0, x = 3),
-#   c(t = 1, coef = 4, t = 2, y = 4),
-#   c(x = 1),
-#   c(x = 1),
-#   c(coef = 5),
-#   c(coef = 5),
-#   c(coef = -5)
-# )
-# 
-# term <- list[[4]]
-# 
-# term <- unclass(structure(
-#   list(
-#     coef = complex(real = 1, imaginary = -2),
-#     core = c("x" = 3L, "y" = 4L)
-#   ),
-#   class = "mpoly_term"
-# ))
-# 
-# mpoly_term(term)
-# 
-# 
-# term <- structure(
-#   list(
-#     coef = complex(real = 1, imaginary = -2),
-#     core = c("x" = 3L, "y" = 4L)
-#   ),
-#   class = "mpoly_term"
-# )
+mpoly(list)
+mp("")
+
+list <- list(
+  c(x = 1, coef = 1, y = 0),
+  c(x = 0, y = 1, coef = 2),
+  c(y = 1, coef = -6),
+  c(z = 1, coef = -3, x = 2),
+  c(x = 1, coef = 0, x = 3),
+  c(t = 1, coef = 4, t = 2, y = 4),
+  c(x = 1),
+  c(x = 1),
+  c(coef = 5),
+  c(coef = 5),
+  c(coef = -5)
+)
+
+term <- list[[4]]
+
+term <- unclass(structure(
+  list(
+    coef = complex(real = 1, imaginary = -2),
+    core = c("x" = 3L, "y" = 4L)
+  ),
+  class = "mpoly_term"
+))
+
+mpoly_term(term)
+
+
+term <- structure(
+  list(
+    coef = complex(real = 1, imaginary = -2),
+    core = c("x" = 3L, "y" = 4L)
+  ),
+  class = "mpoly_term"
+)
 
 
 mpoly_term <- function(term, varorder){
