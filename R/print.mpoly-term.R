@@ -1,5 +1,7 @@
 # print.mpoly-term
 
+term <- list[[2]]
+
 print.mpoly_term <- function (term, silent = FALSE, stars = FALSE) {
   
   # treat constant terms (no indeterminates) and those with vars differently

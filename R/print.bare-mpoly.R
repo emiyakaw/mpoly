@@ -1,7 +1,6 @@
 # print.bare-mpoly
 
 
-
 print.bare_mpoly <- function (x, silent = FALSE, ...) {
   
   # print each term
