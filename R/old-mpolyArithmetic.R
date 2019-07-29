@@ -57,142 +57,30 @@ mpol <- structure(
 e1 <- p
 e2 <- p
 
-term <- structure(
-  list(
-    coef = -1,
-    core = c("x" = 2L, "y" = 1L)
-  ),
-  class = "mpoly_term"
-)
-
-e1 <- term
-e2 <- term
-
-
-e1 + e2
 
 #' @rdname mpolyArithmetic
 #' @export
-`+.mpoly_term` <- function(e1, e2){
-  
-  # strip to lists
-  e1 <- unclass(e1)
-  e2 <- unclass(e2)
-  
-  # if either is constant, mpoly it
-  # if(!is.list(e1)){
-  #   stopifnot(is.numeric(e1) && length(e1) == 1)
-  #   e1 <- list(c(coef = e1))
-  # }
-  
-  # if(!is.list(e2)){
-  #   stopifnot(is.numeric(e2) && length(e2) == 1)
-  #   e2 <- list(c(coef = e2))
-  # }
-
-  # let bare_mpoly do the heavy lifting
-  
-  bare_mpoly(list(e1,e2))
-}
-
-#' @rdname mpolyArithmetic
-#' @export
-
-p <- structure(
-  list(
-    structure(
-      list(
-        coef = -5,
-        core = integer(0)
-      ),
-      class = "mpoly_term"
-    ),
-    structure(
-      list(
-        coef = -1,
-        core = c("x" = 2L, "y" = 1L)
-      ),
-      class = "mpoly_term"
-    )
-  ),
-  class = "bare_mpoly"
-)
-
-e1 <- p
-e2 <- p
-
-p + p
-
-
-`+.bare_mpoly` <- function(e1, e2){
-  
-  # strip to lists
-  e1 <- unclass(e1)
-  e2 <- unclass(e2)
-  
-  # if either is constant, mpoly it
-  # if(!is.list(e1)){
-  #   stopifnot(is.numeric(e1) && length(e1) == 1)
-  #   e1 <- list(c(coef = e1))
-  # }
-  
-  # if(!is.list(e2)){
-  #   stopifnot(is.numeric(e2) && length(e2) == 1)
-  #   e2 <- list(c(coef = e2))
-  # }
-  
-  # let bare_mpoly do the heavy lifting
-  
-  bare_mpoly(c(e1,e2))
-}
-
-list <- structure(
-  list(p, p, p, p),
-  class = "mpoly",
-  coefring = "numeric",
-  vars = c("x", "y"),
-  .Dim = c(2L,2L)
-)
-
-e1 <- list
-e2 <- list
-
-e1 + e2
-
-
 `+.mpoly` <- function(e1, e2){
   
-  # must be same dimentions
-  if (!all.equal(dim(e1), dim(e2))) {
-    stop("mpoly arrays must have the same dimension", call. = FALSE)
-  }
-  
-  
-  
   # strip to lists
   e1 <- unclass(e1)
   e2 <- unclass(e2)
   
-  new_mpoly <- lapply(1:4, function(x) e1[[x]] + e2[[x]])
-  dim(new_mpoly) <- dim(e1)
-  
-  
   # if either is constant, mpoly it
-  # if(!is.list(e1)){
-  #   stopifnot(is.numeric(e1) && length(e1) == 1)
-  #   e1 <- list(c(coef = e1))
-  # }
+  if(!is.list(e1)){
+    stopifnot(is.numeric(e1) && length(e1) == 1)
+    e1 <- list(c(coef = e1))
+  }
   
-  # if(!is.list(e2)){
-  #   stopifnot(is.numeric(e2) && length(e2) == 1)
-  #   e2 <- list(c(coef = e2))
-  # }
-  
-  # let bare_mpoly do the heavy lifting
-  
-  class(new_mpoly) <- "mpoly"
-  new_mpoly
+  if(!is.list(e2)){
+    stopifnot(is.numeric(e2) && length(e2) == 1)
+    e2 <- list(c(coef = e2))
+  }
+
+  # let mpoly do the heavy lifting
+  mpoly(c(e1, e2)) 
 }
+
 
 
 

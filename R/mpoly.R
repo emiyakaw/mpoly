@@ -49,7 +49,7 @@ mpol2 <- structure(
 mpoly(list)
 
 list <- unclass(structure(
-  list(p, p, pmp),
+  list(p, p, p, p),
   class = "mpoly",
   coefring = "numeric",
   vars = c("x", "y"),
