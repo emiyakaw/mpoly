@@ -1,6 +1,6 @@
 # print.mpoly-term
 
-term <- list[[2]]
+# term <- list[[2]]
 
 print.mpoly_term <- function (term, silent = FALSE, stars = FALSE) {
   

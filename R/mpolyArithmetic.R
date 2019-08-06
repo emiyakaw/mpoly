@@ -22,54 +22,54 @@
 #' 
 #' 
 #' 
-NULL
-
-
-p <- structure(
-  list(
-    structure(
-      list(
-        coef = -5,
-        core = integer(0)
-      ),
-      class = "mpoly_term"
-    ),
-    structure(
-      list(
-        coef = -1,
-        core = c("x" = 2L, "y" = 1L)
-      ),
-      class = "mpoly_term"
-    )
-  ),
-  class = "bare_mpoly"
-)
-
-
-mpol <- structure(
-  list(p),
-  class = "mpoly",
-  coefring = "numeric",
-  #  vars = c("x", "y"),
-  .Dim = c(1L,1L)
-)
-
-e1 <- p
-e2 <- p
-
-term <- structure(
-  list(
-    coef = -1,
-    core = c("x" = 2L, "y" = 1L)
-  ),
-  class = "mpoly_term"
-)
-
-e1 <- term
-e2 <- term
-
-
-e1 + e2
+# NULL
+# 
+# 
+# p <- structure(
+#   list(
+#     structure(
+#       list(
+#         coef = -5,
+#         core = integer(0)
+#       ),
+#       class = "mpoly_term"
+#     ),
+#     structure(
+#       list(
+#         coef = -1,
+#         core = c("x" = 2L, "y" = 1L)
+#       ),
+#       class = "mpoly_term"
+#     )
+#   ),
+#   class = "bare_mpoly"
+# )
+# 
+# 
+# mpol <- structure(
+#   list(p),
+#   class = "mpoly",
+#   coefring = "numeric",
+#   #  vars = c("x", "y"),
+#   .Dim = c(1L,1L)
+# )
+# 
+# e1 <- p
+# e2 <- p
+# 
+# term <- structure(
+#   list(
+#     coef = -1,
+#     core = c("x" = 2L, "y" = 1L)
+#   ),
+#   class = "mpoly_term"
+# )
+# 
+# e1 <- term
+# e2 <- term
+# 
+# 
+# e1 + e2
 
 #' @rdname mpolyArithmetic
 #' @export
@@ -98,30 +98,30 @@ e1 + e2
 #' @rdname mpolyArithmetic
 #' @export
 
-p <- structure(
-  list(
-    structure(
-      list(
-        coef = -5,
-        core = integer(0)
-      ),
-      class = "mpoly_term"
-    ),
-    structure(
-      list(
-        coef = -1,
-        core = c("x" = 2L, "y" = 1L)
-      ),
-      class = "mpoly_term"
-    )
-  ),
-  class = "bare_mpoly"
-)
-
-e1 <- p
-e2 <- p
-
-p + p
+# p <- structure(
+#   list(
+#     structure(
+#       list(
+#         coef = -5,
+#         core = integer(0)
+#       ),
+#       class = "mpoly_term"
+#     ),
+#     structure(
+#       list(
+#         coef = -1,
+#         core = c("x" = 2L, "y" = 1L)
+#       ),
+#       class = "mpoly_term"
+#     )
+#   ),
+#   class = "bare_mpoly"
+# )
+# 
+# e1 <- p
+# e2 <- p
+# 
+# p + p
 
 
 `+.bare_mpoly` <- function(e1, e2){
@@ -146,18 +146,18 @@ p + p
   bare_mpoly(c(e1,e2))
 }
 
-list <- structure(
-  list(p, p, p, p),
-  class = "mpoly",
-  coefring = "numeric",
-  vars = c("x", "y"),
-  .Dim = c(2L,2L)
-)
-
-e1 <- list
-e2 <- list
-
-e1 + e2
+# list <- structure(
+#   list(p, p, p, p),
+#   class = "mpoly",
+#   coefring = "numeric",
+#   vars = c("x", "y"),
+#   .Dim = c(2L,2L)
+# )
+# 
+# e1 <- list
+# e2 <- list
+# 
+# e1 + e2
 
 
 `+.mpoly` <- function(e1, e2){
