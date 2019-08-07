@@ -57,32 +57,32 @@
 # 
 # 
 
-# list <- unclass(structure(
-#   list(
-#     structure(
-#       list(
-#         coef = complex(real = -5, imaginary = 1),
-#         core = c("z" = -1L)
-#       ),
-#       class = "mpoly_term"
-#     ),
-#     structure(
-#       list(
-#         coef = complex(real = -1),
-#         core = c("x" = 2L, "y" = 1L)
-#       ),
-#       class = "mpoly_term"
-#     ),
-#     structure(
-#       list(
-#         coef = complex(real = 3),
-#         core = c("x" = 2L, "y" = 1L)
-#       ),
-#       class = "mpoly_term"
-#     )
-#   ),
-#   class = "bare_mpoly"
-# ))
+list <- unclass(structure(
+  list(
+    structure(
+      list(
+        coef = complex(real = -5, imaginary = 1),
+        core = c("z" = -1L)
+      ),
+      class = "mpoly_term"
+    ),
+    structure(
+      list(
+        coef = complex(real = -1),
+        core = c("x" = 2L, "y" = 1L)
+      ),
+      class = "mpoly_term"
+    ),
+    structure(
+      list(
+        coef = complex(real = 3),
+        core = c("x" = 3L, "y" = 1L)
+      ),
+      class = "mpoly_term"
+    )
+  ),
+  class = "bare_mpoly"
+ ))
 # 
 # 
 # list <- structure(
@@ -143,42 +143,44 @@
 #   class = "bare_mpoly"
 # )
 
-bare_mpoly <- function(list, varorder){
+bare_mpoly <- function(list, varorder, simplify = FALSE){
 
   ## argument checking
   core_list <- lapply(list, function (x) x$`core`)
+  
+  ## simplify bare_mpoly if simplify = TRUE
+  if (simplify) {
+    core_equal <- function(index) {
+      equal_cores <- which(core_list[(index + 1) : (length(core_list))] %in% core_list[index])
+      if (length(equal_cores) == 0) {
+        return (c(0,0))
+      } else {
+        return (c(index,index + equal_cores))
+      }
+    }
     
-  core_equal <- function(index) {
-    equal_cores <- which(core_list[(index + 1) : (length(core_list))] %in% core_list[index])
-    if (length(equal_cores) == 0) {
-      return (c(0,0))
-    } else {
-      return (c(index,index + equal_cores))
+    # make vector of pairs where cores match
+    core_pairs_matching <- as.vector(sapply(1:length(core_list) - 1, core_equal))
+    
+    # if there is a matching pair, make one coef the addition of the two, and the other one becomes zero
+    combine_matching_cores <- function(index) {
+      pair <- core_pairs_matching[(index * 2 - 1):(index * 2)]
+      if (!identical(pair, c(0,0))) {
+        coef1 <- list[[pair[1]]]$coef
+        coef2 <- list[[pair[2]]]$coef
+        new_coef <- coef1 + coef2
+        list[[pair[1]]]$coef <<- 0 #get rid of one coef
+        list[[pair[2]]]$coef <<- new_coef #add coefs and put into second coef
+      }
+      return (invisible(c()))
     }
+    
+    invisible(lapply(1:length(list), combine_matching_cores))
+    
+    # remove terms with coef 0
+    list <- filterOutZeroTerms(list)
+  
   }
-  
-  # make vector of pairs where cores match
-  core_pairs_matching <- as.vector(sapply(1:length(core_list) - 1, core_equal))
-  
-  # if there is a matching pair, make one coef the addition of the two, and the other one becomes zero
-  combine_matching_cores <- function(index) {
-    pair <- core_pairs_matching[(index * 2 - 1):(index * 2)]
-    if (!identical(pair, c(0,0))) {
-      coef1 <- list[[pair[1]]]$coef
-      coef2 <- list[[pair[2]]]$coef
-      new_coef <- coef1 + coef2
-      list[[pair[1]]]$coef <<- 0 #get rid of one coef
-      list[[pair[2]]]$coef <<- new_coef #add coefs and put into second coef
-    }
-    return (invisible(c()))
-  }
-  
-  invisible(lapply(1:length(list), combine_matching_cores))
-  
-  # remove terms with coef 0
-  list <- filterOutZeroTerms(list)
-  
-  
   
   
   ## set intrinsic varorder - done again after 0 degrees are removed

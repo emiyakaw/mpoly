@@ -50,9 +50,7 @@
 #' @rdname mp
 #' 
 
-string <- "2 y"
 
-vars
 
 make_indeterminate_list <- function (vars) {
   
@@ -88,7 +86,7 @@ make_indeterminate_list <- function (vars) {
 }
 # make_indeterminate_list("a")
 # make_indeterminate_list(letters) 
-make_indeterminate_list(vars)
+# make_indeterminate_list(vars)
 
 
 #' @export
